@@ -28,16 +28,34 @@ To run the application, you will need to have [python 2.7](https://www.python.or
 
 ## Running the project
 The project Pycnn code is divided to 2 parts:
-* 1. [CNNFromScratch.py](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/src/CNNFromScratch.py) - which contains the code needed to learn the model weights.
-* 2. [CNNFSWeb.py](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/src/CNNFSWeb.py) - which supllies with the web page intarface backend code to use the pre-trained weights to classify new article text.
+* [CNNFromScratch.py](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/src/CNNFromScratch.py) - which contains the code needed to learn the model weights.
+* [CNNFSWeb.py](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/src/CNNFSWeb.py) - which supplies with the web page interface backend code to use the pre-trained weights to classify new article text.
 
-After folfilling all of the requirmentes above, the code can be run with the following commands:
-# part 1 - 
+After fulfilling all of the requirmentes above, the code can be run with the following commands:
+* part 1 - 
 ```
-python2.7 /Path/to/file/directory/CNNFromScratch.py
+python2.7 /Path/to/file/directory/CNNFromScratch.py --cnn-mem 8192
 ```
-
-# part 2 - 
+With the following usage options:
+    -n --max_text_length=N  Maximum length out of the input the CNN will read [default: 1014]
+    -l --learning_rate=L  The CNN learning rate [default: 0.01]
+    -m --momentum=M  The CNN momentum [default: 0.9]
+    -r --regularization=R  The CNN regularization constant [default: 0.000001]
+    -t --relu_threshold=T  The minimum threshold for the CNN activation function [default: 0.000001]
+    -b --batch_size=B  The CNN batch size [default: 128]
+    -e --epoch_num=E  Number of epochs the CNN will execute [default: 10]
+    --weights_file_name=W  The absolute name & path for the model's saved weights file [default: ./CNNSavedWeights]
+    --test_res_file_name=F  The absolute name & path for the model's test results output file [default: ./CNNTestResults.txt]
+    --test_set_file_path=TES  The absolute name & path for the model's test set input file [default: ./AGNewsDB/test.csv]
+    --train_set_file_path=TRS  The absolute name & path for the model's train set input file [default: ./AGNewsDB/train.csv]
+    
+* part 2 - 
 ```
 python2.7 /Path/to/file/directory/CNNFSWeb.py
 ```
+With the following usage options:
+    -n --max_text_length=N  Maximum length out of the input the CNN will read [default: 1014]
+    -t --relu_threshold=T  The minimum threshold for the CNN activation function [default: 0.000001]
+    -h --host=H  host server address [default: localhost]
+    -p --port=P  port of host server [default: 8000]
+    -w --weights_file_path=W  The absolute name & path for the model's saved weights file [default: ./CNNSavedWeights]
