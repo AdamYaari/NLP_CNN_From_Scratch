@@ -29,30 +29,31 @@ To run the application, you will need to have [python 2.7](https://www.python.or
 ## Running the project
 The project Pycnn code is divided to 2 parts: <br />
 1. [CNNFromScratch.py](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/src/CNNFromScratch.py) - which contains the code needed to learn the model weights. <br />
-2. [CNNFSWeb.py](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/src/CNNFSWeb.py) - which supplies with the web page interface backend code to use the pre-trained weights to classify new article text. <br />
+2. [CNNFSWeb.py](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/src/CNNFSWeb.py) - which supplies with the web page interface backend code to use the pre-trained weights to classify new article text. 
 
 After fulfilling all of the requirmentes above, the code can be run with the following commands:
 ### part 1 
 ```
 python2.7 /Path/to/file/directory/CNNFromScratch.py --cnn-mem 8192
 ```
-With the following usage options: <br />
+With the following usage options:
 ```
-   * -n --max_text_length=N  Maximum length out of the input the CNN will read [default: 1014] <br />
-   * -l --learning_rate=L  The CNN learning rate [default: 0.01] <br />
-   * -m --momentum=M  The CNN momentum [default: 0.9] <br />
-   * -r --regularization=R  The CNN regularization constant [default: 0.000001] <br />
-   * -t --relu_threshold=T  The minimum threshold for the CNN activation function [default: 0.000001] <br /> 
-   * -b --batch_size=B  The CNN batch size [default: 128] <br />
-   * -e --epoch_num=E  Number of epochs the CNN will execute [default: 10] <br />
-   * --weights_file_name=W  The absolute name & path for the model's saved weights file [default: ./CNNSavedWeights] <br />
-   * --test_res_file_name=F  The absolute name & path for the model's test results output file [default: ./CNNTestResults.txt] <br />
-   * --test_set_file_path=TES  The absolute name & path for the model's test set input file [default: ./AGNewsDB/test.csv] <br />
-   * --train_set_file_path=TRS  The absolute name & path for the model's train set input file [default: ./AGNewsDB/train.csv] <br />
-```    
+-n --max_text_length=N  Maximum length out of the input the CNN will read [default: 1014]
+-l --learning_rate=L  The CNN learning rate [default: 0.01]
+-m --momentum=M  The CNN momentum [default: 0.9]
+-r --regularization=R  The CNN regularization constant [default: 0.000001]
+-t --relu_threshold=T  The minimum threshold for the CNN activation function [default: 0.000001]
+-b --batch_size=B  The CNN batch size [default: 128]
+-e --epoch_num=E  Number of epochs the CNN will execute [default: 10]
+--weights_file_name=W  The absolute name & path for the model's saved weights file [default: ./CNNSavedWeights]
+--test_res_file_name=F  The absolute name & path for the model's test results output file [default: ./CNNTestResults.txt]  
+--test_set_file_path=TES  The absolute name & path for the model's test set input file [default: ./AGNewsDB/test.csv]
+--train_set_file_path=TRS  The absolute name & path for the model's train set input file [default: ./AGNewsDB/train.csv]
+```  
+
 #### Code output
-1. Weights file - which are saved every epoch (and overwrite the previous epoch weights which are redundent).
-2. Tests log file - after every epoch a test is being made on the test set, and both the avarage loss and the test accuracy are writen to the log file, along with the run parameters.
+1. Weights file - which are saved every epoch (and overwrite the previous epoch weights which are redundant).
+2. Tests log file - after every epoch a test is being made on the test set, and both the average loss and the test accuracy are writen to the log file, along with the run parameters.
 
 ### part 2
 ```
@@ -64,7 +65,7 @@ With the following usage options:
 -t --relu_threshold=T  The minimum threshold for the CNN activation function [default: 0.000001]
 -h --host=H  host server address [default: localhost]
 -p --port=P  port of host server [default: 8000]
--w --weights_file_path=W  The absolute name & path for the model's saved weights file [default: ./CNNSavedWeights]
+-w --weights_file_path=W  The absolute name & path for the model's pre-trained saved weights file [default: ./CNNSavedWeights]
 ```
 
 After running the above command the server is up and running and the web page can be accessed via any browser in the following address for the defualt host and port values:
@@ -81,12 +82,39 @@ To enjoy the newly trained weights, just add a text (at least 1014 charecters lo
 the given text predicted category
 
 
-## Important Remarks
-* In the current version of the Pycnn code there is no spaicel adjustment for GPU adaptability, which might be neccesary if one wants to use a GPU to exlarate the run time.
-* At the moment, with no GPU, each epoch takes approximatly 1 day (please take into considration when setting epoch number.
-* According to ampiric resualts so far, in-order to get optimal results at least 8-10 epochs are required.
-* --cnn-mem is defined as 8192 and as a required parameter to part 1 of the code, because of the default (128) batch size, this requirment can be reduced along with a reduction of the batch size (non is naccessary for batch size 8).
-
+### Pycnn Important Remarks
+* In the current version of the Pycnn code there is no special adjustment for GPU adaptability, which might be neccesary if one wants to use a GPU to accelerate the run time.
+* At the moment, with no GPU, each epoch takes approximatly 1 day (please take into consideration when setting epoch number.
+* According to empiric results so far, in-order to get optimal results at least 8-10 epochs are required.
+* --cnn-mem is defined as 8192 and as a required parameter to part 1 of the code, because of the default (128) batch size, this requirment can be reduced along with a reduction of the batch size (non is neccessary for batch size 8).
 
 ## Runnig the Keras code
+Running the [KerasCNNFromScratch.py](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/keras_src/KerasCNNFromScratch.py) is almost similar to part 1 of the Pycnn code, with the exception of "--cnn-mem" demand and a few minor differences in the optional parameters
+```
+python2.7 /Path/to/file/directory/KerasCNNFromScratch.py
+```
+With the following usage options:
+```
+    -n --max_text_length=N  Maximum length out of the input the CNN will read [default: 1014]
+    -l --learning_rate=L  The CNN learning rate [default: 0.01]
+    -m --momentum=M  The CNN momentum [default: 0.9]
+    -t --relu_threshold=T  The minimum threshold for the CNN activation function [default: 0.000001]
+    -b --batch_size=B  The CNN batch size [default: 128]
+    -e --epoch_num=E  Number of epochs the CNN will execute 3 times with half the L in each round [default: 10]
+    --weights_file_name=W  The absolute name & path for the model's saved weights file [default: ./CNNSavedWeights]
+    --test_set_file_path=TES  The absolute name & path for the model's test set input file [default: ./AGNewsDB/test.csv]
+    --train_set_file_path=TRS  The absolute name & path for the model's train set input file [default: ./AGNewsDB/train.csv]
+```
 
+### Keras Important Remarks
+* Even without a GPU the keras model run a lot faster then it's Pycnn equivalent, and takes less then 2 days to finish a run of 10 epochs.
+* I did not implemented a web interface that intract with the Keras saved weights, the one mentioned above is equiped solly for the Pycnn model.
+* Due to it's relatively short run time, the keras model save it's weights only once in the end of the run.
+
+
+#### Written by: Adam Yaari
+##### Supervised by Dr. [Yoav Goldberg](https://www.cs.bgu.ac.il/~yoavg/uni/)
+
+For any question, suggestion etc:
+
+a.u.yaari@gmail.com
