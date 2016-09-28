@@ -49,13 +49,41 @@ With the following usage options: <br />
    * --test_set_file_path=TES  The absolute name & path for the model's test set input file [default: ./AGNewsDB/test.csv] <br />
    * --train_set_file_path=TRS  The absolute name & path for the model's train set input file [default: ./AGNewsDB/train.csv] <br />
     
+#### Code output
+1. Weights file - which are saved every epoch (and overwrite the previous epoch weights which are redundent).
+2. Tests log file - after every epoch a test is being made on the test set, and both the avarage loss and the test accuracy are writen to the log file, along with the run parameters.
+
 ### part 2 - 
 ```
 python2.7 /Path/to/file/directory/CNNFSWeb.py
 ```
 With the following usage options: <br />
-    -n --max_text_length=N  Maximum length out of the input the CNN will read [default: 1014] <br />
-    -t --relu_threshold=T  The minimum threshold for the CNN activation function [default: 0.000001] <br />
-    -h --host=H  host server address [default: localhost] <br />
-    -p --port=P  port of host server [default: 8000] <br />
-    -w --weights_file_path=W  The absolute name & path for the model's saved weights file [default: ./CNNSavedWeights] <br />
+   * -n --max_text_length=N  Maximum length out of the input the CNN will read [default: 1014] <br />
+   * -t --relu_threshold=T  The minimum threshold for the CNN activation function [default: 0.000001] <br />
+   * -h --host=H  host server address [default: localhost] <br />
+   * -p --port=P  port of host server [default: 8000] <br />
+   * -w --weights_file_path=W  The absolute name & path for the model's saved weights file [default: ./CNNSavedWeights] <br />
+
+After running the above command the server is up and running and the web page can be accessed via any browser in the following address for the defualt host and port values:
+```
+http://localhost:8000/CNNFromScratch
+```
+Or in a more general fashion:
+```
+http://host_name:port_number/CNNFromScratch
+```
+To enjoy the newly trained weights, just add a text (at least 1014 charecters long) and press the "submit button".
+
+#### Code output
+the given text predicted category
+
+
+## Important Remarks
+* In the current version of the Pycnn code there is no spaicel adjustment for GPU adaptability, which might be neccesary if one wants to use a GPU to exlarate the run time.
+* At the moment, with no GPU, each epoch takes approximatly 1 day (please take into considration when setting epoch number.
+* According to ampiric resualts so far, in-order to get optimal results at least 8-10 epochs are required.
+* --cnn-mem is defined as 8192 and as a required parameter to part 1 of the code, because of the default (128) batch size, this requirment can be reduced along with a reduction of the batch size (non is naccessary for batch size 8).
+
+
+## Runnig the Keras code
+
