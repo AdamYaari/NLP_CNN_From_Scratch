@@ -16,3 +16,9 @@ The goal of my project was to re-create and improve the work mentioned above usi
  that purpose a 9 layers convolutional neural network was used, in the attempt to achieve, 
  with a raw input of letters, a similar success to this the artificial vision is demonstrating 
  with a raw signal of pixels.
+
+## External libraries
+* Using [Pycnn](https://github.com/clab/cnn/pycnn) for the main focus network of this project.
+* Using [Keras](https://github.com/fchollet/keras) for the secondary, more readable and easy to use network.
+* Using [bottle](https://github.com/bottlepy/bottle) for creating a web page interface.
+* Using [docopt](https://github.com/docopt/docopt) for creating an easy to use parameters access.
