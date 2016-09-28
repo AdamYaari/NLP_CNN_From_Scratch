@@ -25,3 +25,19 @@ The goal of my project was to re-create and improve the work mentioned above usi
 
 ## Other requirements
 To run the application, you will need to have [python 2.7](https://www.python.org/download/releases/2.7/) with all of libreries above (Keras is optional) installed in it's working directory.
+
+## Running the project
+The project Pycnn code is divided to 2 parts:
+1. [CNNFromScratch.py](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/src/CNNFromScratch.py) - which contains the code needed to learn the model weights.
+2. [CNNFSWeb.py](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/src/CNNFSWeb.py) - which supllies with the web page intarface backend code to use the pre-trained weights to classify new article text.
+
+After folfilling all of the requirmentes above, the code can be run with the following commands:
+part 1 - 
+```
+python2.7 /Path/to/file/directory/CNNFromScratch.py
+```
+
+part 2 - 
+```
+python2.7 /Path/to/file/directory/CNNFSWeb.py
+```
