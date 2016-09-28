@@ -22,3 +22,6 @@ The goal of my project was to re-create and improve the work mentioned above usi
 * Using [Keras](https://github.com/fchollet/keras) for the secondary, more readable and easy to use network.
 * Using [bottle](https://github.com/bottlepy/bottle) for creating a web page interface.
 * Using [docopt](https://github.com/docopt/docopt) for creating an easy to use parameters access.
+
+## Other requirements
+To run the application, you will need to have [python 2.7](https://www.python.org/download/releases/2.7/) with all of libreries above (Keras is optional) installed in it's working directory.
