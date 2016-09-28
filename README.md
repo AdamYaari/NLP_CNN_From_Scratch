@@ -24,8 +24,8 @@ The goal of my project was to re-create and improve the work mentioned above usi
 * Using [docopt](https://github.com/docopt/docopt) for creating an easy to use parameters access.
 
 ## Other requirements
-To run the application, you will need to have [python 2.7](https://www.python.org/download/releases/2.7/) with all of libreries above (Keras is optional) installed in it's working directory. <br />
-**Before running the code you need to download and extract [AG's News Data Base](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/AGNewsDB.zip)** supplied in this repository, and either place it in the same directory as the project code, or pass the route to the DB location via a parameter (will be explained later).
+* To run the application, you will need to have [python 2.7](https://www.python.org/download/releases/2.7/) with all of libreries above (Keras is optional) installed in it's working directory.
+* **Before running the code you need to download and extract [AG's News Data Base](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/AGNewsDB.zip)** supplied in this repository, and either place it in the same directory as the project code, or pass the route to the DB location via a parameter (will be explained later).
 
 ## Running the project
 The project Pycnn code is divided to 2 parts: <br />
