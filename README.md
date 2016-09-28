@@ -32,11 +32,12 @@ The project Pycnn code is divided to 2 parts: <br />
 2. [CNNFSWeb.py](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/src/CNNFSWeb.py) - which supplies with the web page interface backend code to use the pre-trained weights to classify new article text. <br />
 
 After fulfilling all of the requirmentes above, the code can be run with the following commands:
-### part 1 - 
+### part 1 
 ```
 python2.7 /Path/to/file/directory/CNNFromScratch.py --cnn-mem 8192
 ```
 With the following usage options: <br />
+```
    * -n --max_text_length=N  Maximum length out of the input the CNN will read [default: 1014] <br />
    * -l --learning_rate=L  The CNN learning rate [default: 0.01] <br />
    * -m --momentum=M  The CNN momentum [default: 0.9] <br />
@@ -48,21 +49,23 @@ With the following usage options: <br />
    * --test_res_file_name=F  The absolute name & path for the model's test results output file [default: ./CNNTestResults.txt] <br />
    * --test_set_file_path=TES  The absolute name & path for the model's test set input file [default: ./AGNewsDB/test.csv] <br />
    * --train_set_file_path=TRS  The absolute name & path for the model's train set input file [default: ./AGNewsDB/train.csv] <br />
-    
+```    
 #### Code output
 1. Weights file - which are saved every epoch (and overwrite the previous epoch weights which are redundent).
 2. Tests log file - after every epoch a test is being made on the test set, and both the avarage loss and the test accuracy are writen to the log file, along with the run parameters.
 
-### part 2 - 
+### part 2
 ```
 python2.7 /Path/to/file/directory/CNNFSWeb.py
 ```
-With the following usage options: <br />
-   * -n --max_text_length=N  Maximum length out of the input the CNN will read [default: 1014] <br />
-   * -t --relu_threshold=T  The minimum threshold for the CNN activation function [default: 0.000001] <br />
-   * -h --host=H  host server address [default: localhost] <br />
-   * -p --port=P  port of host server [default: 8000] <br />
-   * -w --weights_file_path=W  The absolute name & path for the model's saved weights file [default: ./CNNSavedWeights] <br />
+With the following usage options:
+```
+-n --max_text_length=N  Maximum length out of the input the CNN will read [default: 1014]
+-t --relu_threshold=T  The minimum threshold for the CNN activation function [default: 0.000001]
+-h --host=H  host server address [default: localhost]
+-p --port=P  port of host server [default: 8000]
+-w --weights_file_path=W  The absolute name & path for the model's saved weights file [default: ./CNNSavedWeights]
+```
 
 After running the above command the server is up and running and the web page can be accessed via any browser in the following address for the defualt host and port values:
 ```
