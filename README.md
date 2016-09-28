@@ -84,9 +84,10 @@ the given text predicted category
 
 ### Pycnn Important Remarks
 * In the current version of the Pycnn code there is no special adjustment for GPU adaptability, which might be neccesary if one wants to use a GPU to accelerate the run time.
-* At the moment, with no GPU, each epoch takes approximatly 1 day (please take into consideration when setting epoch number.
+* At the moment, with no GPU, each epoch takes approximatly 1 day (please take into consideration when setting epoch number).
 * According to empiric results so far, in-order to get optimal results at least 8-10 epochs are required.
 * --cnn-mem is defined as 8192 and as a required parameter to part 1 of the code, because of the default (128) batch size, this requirment can be reduced along with a reduction of the batch size (non is neccessary for batch size 8).
+* **The Pycnn code presented in this repository is not the one wrote the results for in my [report](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/ProjectReport.pdf)**, but the most similar to the one presented in the original paper. 
 
 ## Runnig the Keras code
 Running the [KerasCNNFromScratch.py](https://github.com/AdamYaari/NLP_CNN_From_Scratch/blob/master/keras_src/KerasCNNFromScratch.py) is almost similar to part 1 of the Pycnn code, with the exception of "--cnn-mem" demand and a few minor differences in the optional parameters
