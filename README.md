@@ -9,7 +9,7 @@ on text classification on a charecter level using CNN.
 
 ## Project Discription
 The goal of my project was to re-create and improve the work mentioned above using a 
- relatively "low level" artificial neural network language in-order to understand the 
+ relatively "low level" artificial neural network package in-order to understand the 
  essance of the model. Which means to succeed and perform text classification task using 
  only character level vectors input method, rather then word vectors, which requires a 
  significant pre-process effort (to execute Word2Vec or a similar word embedding). For 
