@@ -12,10 +12,9 @@ import pycnn as pc
 import CNNFromScratchModule as module
 from bottle import run, get, post, request
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-CNNFromScratch is a Pycnn implementation of "Text Understanding from Scratch" paper by Xiang Zhang & Yann LeCun
-Published in arXiv in April 2016.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''CNNFSWeb is the web intarface to a Pycnn implementation of "Text Understanding from Scratch" paper by Xiang Zhang &
+Yann LeCun published in arXiv in April 2016.'''
+
 arguments = docopt.docopt(__doc__)
 
 host = arguments['--host']
@@ -25,12 +24,12 @@ weights_file_path = arguments['--weights_file_path']
 id_to_label_dic = {1: "World", 2: "Sports", 3: "Business", 4: "Sci/Tech"}
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: login
-Output: an html format of the login screen with explanation of the page essence, text box and a "submit" button.
-Functionality: returns an html format of the login screen with a text box to insert article to be classified and
+'''Returns an html format of the login screen with a text box to insert article to be classified and
                 a "submit" button to send for examination.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:returns: an html format of the login screen with explanation of the page essence, text box and a "submit" button.
+:rtype: string
+'''
 @get('/CNNFromScratch')
 def login():
     return '''
@@ -46,13 +45,12 @@ def login():
         </form>
     '''
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: do_login
-Output: an answer of which category is the most suited to the given text out of the given selection.
-Functionality: in this function first a new model is being created, then the trained weights are loaded from the
-                weights file, and lastly a forward propgation is being made, using the input text, and predict it's
-                category.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''Create a new model, load the trained weights from the weights file, run a forward propagation using the input text
+        and predict it's category.
+
+:returns: an answer of which category is the most suited to the given text out of the given selection
+:rtype: string
+'''
 @post('/CNNFromScratch')
 def do_login():
     article_to_label = request.forms.get('article')
