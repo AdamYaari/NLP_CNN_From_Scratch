@@ -23,10 +23,9 @@ from keras.optimizers import SGD
 from keras import initializations
 from keras.layers.advanced_activations import ThresholdedReLU
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-KerasCNNFromScratch is a keras implementation of "Text Understanding from Scratch" paper by Xiang Zhang & Yann LeCun
-Published in arXiv in April 2016.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''KerasCNNFromScratch is a keras implementation of "Text Understanding from Scratch" paper by Xiang Zhang & Yann LeCun
+Published in arXiv in April 2016.'''
+
 arguments = docopt.docopt(__doc__)
 
 quantization_size = 70
@@ -48,23 +47,27 @@ test_set_file_path = arguments['--test_set_file_path']
 train_set_file_path = arguments['--train_set_file_path']
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: gaussian_init
-Input: shape - the shape of weights matrix to be initialized.
-Output: weights in required shape, initialized with gaussian variance of 0.05.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''Gaussian_init.
+
+:param shape: the shape of weights matrix to be initialized
+:type shape: tuple<int>
+:returns: weights in required shape, initialized with gaussian variance of 0.05
+:rtype: Keras matrix
+'''
 def gaussian_init(shape, name=None):
     return initializations.normal(shape, scale=0.05, name=name)
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: arrange_input
-Input: input_table - a list of articles
-Output: categories - a list of labels int id's instead of string, values - a list of concatenated strings combined
-        of the article name and description.
-Functionality: function go over all articles, concatenate all articles name and description, assign them to a values
+'''Go over all articles, concatenate all articles name and description, assign them to a values
                 list and assign all labels id's to a categories list.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param input_table: a list of articles
+:type: list<string>
+:returns categories: a list of labels id's instead of string
+:returns values: a list of concatenated strings combined of the article name and description
+:rtype categories: list<int>
+:rtype values: list<string>
+'''
 def arrange_input(input_table):
     categories = []
     values = []
@@ -78,14 +81,14 @@ def arrange_input(input_table):
     return categories, values
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: quantize_character
-Input: char - a letter to be quantized.
-Output: the letter quantized vector.
-Functionality: the function creates an all zero numpy vector and if the letter is one of the 70 known letters it
-                assigns the vector a 1-to-m proper coding (according to the letter location in the "templateArray",
-                else keeps an all zero vector.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''Creates an all zero numpy vector and if the letter is one of the 70 known letters it assigns the vector a 1-to-m
+            proper coding (according to the letter location in the "templateArray", else keeps an all zero vector.
+
+:param char: a letter to be quantized
+:type: char
+:returns: the letter quantized vector
+:rtype: numpy vector
+'''
 def quantize_character(char):
     quantized_char = np.zeros(quantization_size)
     if char in templateArray:
@@ -93,13 +96,14 @@ def quantize_character(char):
     return quantized_char.transpose()
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: quantize_values
-Input: input_array - array of articles strings.
-Output: all articles as quantized matrix.
-Functionality: for each article in the input array - quantize each letter, concatenate it to a matrix and concatenate
+'''For each article in the input array - quantize each letter, concatenate it to a matrix and concatenate
                 it to a 3D matrix of all quantized articles.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param input_array: array of articles strings
+:type input_array: list<string>
+:returns: all articles as quantized matrix
+:rtype: numpy matrix
+'''
 def quantize_values(input_array):
     quantized_input = np.zeros((len(input_array), maxInput_size, quantization_size))
     for i, article in enumerate(input_array):
@@ -113,13 +117,15 @@ def quantize_values(input_array):
     return quantized_input
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: quantize_categories
-Input: input_array - array of articles labels, cat_dim - number of categories in total.
-Output: all articles labels quantized matrix.
-Functionality: create a "One Hot Vector" coding for each label number, when the "1" location is determined according
-                to label value.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''Create a "One Hot Vector" coding for each label number, when the "1" location is determined according to label value.
+
+:param input_array: array of articles labels
+:param cat_dim: number of categories in total
+:type input_array: list<int>
+:type cat_dim: int
+:returns: all articles labels quantized matrix
+:rtype: numpy matrix
+'''
 def quantize_categories(input_array, cat_dim):
     quantized_input = np.zeros((len(input_array), cat_dim))
     for i, article_cat in enumerate(input_array):
