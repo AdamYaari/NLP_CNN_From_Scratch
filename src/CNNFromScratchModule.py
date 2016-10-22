@@ -10,27 +10,34 @@ templateArray = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'
 cnn_layers_dimensions = [(256, 7), (256, 7), (256, 3), (256, 3), (256, 3), (256, 3)]
 dense_layers_dimensions = [1024, 1024, 4]
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: get_label
-Input: label - a category name in th data set, labels_dictionary - dictionary with all previous categories.
-Output: the label's id.
-Functionality: function checks if the last seen label was previously seen, if not - add the label as a new category,
+'''Function checks if the last seen label was previously seen, if not - add the label as a new category,
                 and in any case returns the label id.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param label: a category name in th data set
+:param labels_dictionary: dictionary with all previous categories
+:type label: string
+:type labels_dictionary: dictionary<string,int>
+:returns: the label's id
+:rtype: int
+'''
 def get_label(label, labels_dictionary):
     if not label in labels_dictionary:
         labels_dictionary[label] = len(labels_dictionary)
     return labels_dictionary[label]
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: arrange_input
-Input: input_table - a list of articles
-Output: categories - a list of labels int id's instead of string, values - a list of concatenated strings combined
-        of the article name and description, category_dic - a dictionary that maps id's and labels real string value.
-Functionality: function go over all articles, concatenate all articles name and description, assign them to a values
+'''Function go over all articles, concatenate all articles name and description, assign them to a values
                 list, assign all labels id's to a categories list and creates the labels to id's dictionary.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param input_table: a list of articles
+:type input_table: list<string>
+:returns categories: a list of labels id's instead of string
+:returns values: a list of concatenated strings combined of the article name and description
+:returns category_dic: a dictionary that maps id's and labels real string value
+:rtype categories: list<int>
+:rtype values: list<string>
+:rtype category_dic: dictionary<string,int>
+'''
 def arrange_input(input_table):
     categories = []
     values = []
@@ -45,15 +52,16 @@ def arrange_input(input_table):
     return categories, values, category_dic
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: quantize_string
-Input: string - a given article to quantize.
-Output: a vector of the quantized article.
-Functionality: for each letter in the sentence, the function creates an all zero Pycnn vector, if the letter is one
+'''For each letter in the sentence, the function creates an all zero Pycnn vector, if the letter is one
                 of the 70 known letters it assigns the vector a 1-to-m proper coding (according to the letter
                 location in the "templateArray", else keeps an all zero vector. after each letter the vector is
                 concatenated to the output vector. Stops quantifying after "MAX_INPUT_SIZE" number of letters.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param string: a given article to quantize
+:type string: string
+:returns: a vector of the quantized article.
+:rtype: Pycnn vector expression
+'''
 def quantize_string(string):
     quantized_vec = np.zeros(QUANTIZATION_SIZE * MAX_INPUT_SIZE)
     cur_index = 0
@@ -68,13 +76,20 @@ def quantize_string(string):
     return quantized_vec_exp
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: initialize_cnn_layer_weights
-Input: mode - Pycnn model, kernel_num - number of kernels in the current layer, kernel_size - size of kernel in the
-        current layer, frame_size - input frame size from previous layer, layer_id_str - layer number.
-Functionality: according to the mentioned above parameters the model creates the convolution layer weights, and it's
+'''According to the mentioned above parameters the model creates the convolution layer weights, and it's
                bias vector weights, when the initialization value have gaussian distribution with a variance of 0.05.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param model: Pycnn model
+:param kernel_num: number of kernels in the current layer
+:param kernel_size: size of kernel in the current layer
+:param frame_size: input frame size from previous layer
+:param layer_id_str: layer number
+:type model: Pycnn model
+:type kernel_num: int
+:type kernel_size: int
+:type frame_size: int
+:type layer_id_str: int
+'''
 def initialize_cnn_layer_weights(model, kernel_num, kernel_size, frame_size, layer_id_str):
     model.add_parameters(layer_id_str, (kernel_num, kernel_size * frame_size))\
         .load_array(np.random.normal(0, 0.05, (kernel_num, kernel_size * frame_size)))
@@ -82,13 +97,18 @@ def initialize_cnn_layer_weights(model, kernel_num, kernel_size, frame_size, lay
     return
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: initialize_dense_layer_weights
-Input: model - Pycnn model, cur_layer_dim - number of cells in this layer, pre_layer_dim - number of cells in
-        previous layer, layer_id_str - layer number.
-Functionality: according to the mentioned above parameters the model creates the dense layer weights, and it's
+'''According to the mentioned above parameters the model creates the dense layer weights, and it's
                bias vector weights, when the initialization value have gaussian distribution with a variance of 0.05.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param model: Pycnn model
+:param cur_layer_dim: number of cells in this layer
+:param pre_layer_dim: number of cells in previous layer
+:param layer_id_str: layer number
+:type model: Pycnn model
+:type cur_layer_dim: int
+:type pre_layer_dim: int
+:type layer_id_str: int
+'''
 def initialize_dense_layer_weights(model, cur_layer_dim, pre_layer_dim, layer_id_str):
     model.add_parameters(layer_id_str, (cur_layer_dim, pre_layer_dim))\
         .load_array(np.random.normal(0, 0.05, (cur_layer_dim, pre_layer_dim)))
@@ -96,15 +116,19 @@ def initialize_dense_layer_weights(model, cur_layer_dim, pre_layer_dim, layer_id
     return
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: initialize_cnn_model_weights
-Input: model - Pycnn model, dense_layers_dim - a list of integers representing the layer size, such that list size
-        is number of such layers (final layer will represent the output layer), conv_layers_dims - same as
-        dense_layers_dim, only with 2D list of (kernel number, kernel size) in each layer.
-Functionality: supervising function to initialize all the model's weights according to the pre-given dimensions set
+'''Supervising function to initialize all the model's weights according to the pre-given dimensions set
                 by the user, and using the 2 initialization function mentioned above. also responsible of assigning
                 each layer with her proper id number.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param model: Pycnn model
+:param dense_layers_dim: a list of integers representing the layer size, such that list size is number of such layers
+                            (final layer will represent the output layer)
+:param conv_layers_dims: same as dense_layers_dim, only with 2D list of (kernel number, kernel size) in each layer
+:param layer_id_str: layer number
+:type model: Pycnn model
+:type dense_layers_dim: list<tuple<int>>
+:type conv_layers_dims: list<tuple<int>>
+'''
 def initialize_cnn_model_weights(model, conv_layers_dims, dense_layers_dim):
     layer_id = 0
     prev_layer_dim = QUANTIZATION_SIZE
@@ -123,15 +147,24 @@ def initialize_cnn_model_weights(model, conv_layers_dims, dense_layers_dim):
     return
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: calc_convolution_layer
-Input: model - Pycnn model, layer_input - the current layer input vector, layer_id_str - current layer id,
-        kernel_size - size of kernels in current layer, frame_size - frame size of the input in current layer,
-        input_len - length of input in current layer.
-Output: a Pycnn expression of the layer output vector after 1D convolution.
-Functionality: this function is doing a 1D convolution over the given input, using kernels matrix and input vector
+'''Executing a 1D convolution over the given input, using kernels matrix and input vector
                 multiplication.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param model: Pycnn model
+:param layer_input: the current layer input vector
+:param layer_id_str: current layer id
+:param kernel_size: size of kernels in current layer
+:param frame_size: frame size of the input in current layer
+:param input_len: length of input in current layer
+:type model: Pycnn model
+:type layer_input: Pycnn vector expression
+:type layer_id_str: string
+:type kernel_size: int
+:type frame_size: int
+:type input_len: int
+:returns: a Pycnn expression of the layer output vector after 1D convolution.
+:rtype: Pycnn vector expression
+'''
 def calc_convolution_layer(model, layer_input, layer_id_str, kernel_size, frame_size, input_len):
     output_vectors = []
     bias_vec = pc.parameter(model["b" + layer_id_str])
@@ -143,14 +176,25 @@ def calc_convolution_layer(model, layer_input, layer_id_str, kernel_size, frame_
     return pc.concatenate(output_vectors)
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: calc_convolution_pooling_layer
-Input: model - Pycnn model, layer_input - the current layer input vector, layer_id_str - current layer id,
-        kernel_size - size of kernels in current layer, frame_size - frame size of the input in current layer,
-        input_len - length of input in current layer, pooling_dim - current layer pooling window dimensions.
-Output: a Pycnn expression of the layer output vector after 1D convolution and pooling.
-Functionality: Same as previous function, with the addition of dimensionality reduction with max pooling.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''Same as previous function, with the addition of dimensionality reduction with max pooling.
+
+:param model: Pycnn model
+:param layer_input: the current layer input vector
+:param layer_id_str: current layer id
+:param kernel_size: size of kernels in current layer
+:param frame_size: frame size of the input in current layer
+:param input_len: length of input in current layer
+:param pooling_dim: current layer pooling window dimensions
+:type model: Pycnn model
+:type layer_input: Pycnn vector expression
+:type layer_id_str: string
+:type kernel_size: int
+:type frame_size: int
+:type input_len: int
+:type pooling_dim: int
+:returns: a Pycnn expression of the layer output vector after 1D convolution and pooling.
+:rtype: Pycnn vector expression
+'''
 def calc_convolution_pooling_layer(model, layer_input, layer_id_str, kernel_size, frame_size, input_len, pooling_dim):
     prepool_vectors = []
     output_vectors = []
@@ -166,22 +210,32 @@ def calc_convolution_pooling_layer(model, layer_input, layer_id_str, kernel_size
     return pc.concatenate(output_vectors)
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: calc_dense_layer
-Input: model - Pycnn model, layer_input - the current layer input vector, layer_id_str - current layer id.
-Output: a Pycnn expression of the layer output vector after fully connected layer calculation.
-Functionality: multiples input by all fully connected weights, and add the bias vector afterwards.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''Multiples input by all fully connected weights, and add the bias vector afterwards.
+
+:param model: Pycnn model
+:param layer_input: the current layer input vector
+:param layer_id_str: current layer id
+:type model: Pycnn model
+:type layer_input: Pycnn vector expression
+:type layer_id_str: string
+:returns: a Pycnn expression of the layer output vector after fully connected layer calculation.
+:rtype: Pycnn vector expression
+'''
 def calc_dense_layer(model, layer_input, layer_id_str):
     return pc.parameter(model[layer_id_str]) * layer_input + pc.parameter(model["b" + layer_id_str])
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: threshold
-Input: input_vec - input vector, thresh - size of threshold number, vec_len - length of input vector.
-Output: the input vector plus the threshold value on all vector cells.
-Functionality: creates an equal sized vector with the threshold value in all his cells and add it to the input vector.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''Creates an equal sized vector with the threshold value in all his cells and add it to the input vector.
+
+:param input_vec: input vector
+:param thresh: size of threshold number
+:param vec_len: length of input vector
+:type input_vec: Pycnn vector expression
+:type thresh: float
+:type vec_len: int
+:returns: the input vector plus the threshold value on all vector cells.
+:rtype: Pycnn vector expression
+'''
 def threshold(input_vec, thresh, vec_len):
     threshold_nparr = np.zeros(vec_len) + thresh
     threshold_pcarr = pc.vecInput(vec_len)
@@ -189,14 +243,22 @@ def threshold(input_vec, thresh, vec_len):
     return input_vec + threshold_pcarr
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: run_network
-Input: model - Pycnn model, input_sentence - a given article, conv_layers_dims - convolution layers dimensions,
-        dense_layers_dims - dense layers dimensions, thresh - threshold number.
-Output: Pycnn vector expression with the value of the network forward propagation output.
-Functionality: this function is the hurt of this code, and is representing the structure of the network. every layer
+'''This function is the hurt of this code, and is representing the structure of the network. every layer
                 in the origin paper is separated by an empty line and is assigned with its proper parameters.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param model: Pycnn model
+:param input_sentence: a given article
+:param conv_layers_dims: convolution layers dimensions
+:param dense_layers_dims: dense layers dimensions
+:param thresh: threshold number
+:type model: Pycnn model
+:type input_sentence: string
+:type conv_layers_dims: list<tuple<int>>
+:type dense_layers_dims: list<tuple<int>>
+:type thresh: float
+:returns: Pycnn vector expression with the value of the network forward propagation output.
+:rtype: Pycnn vector expression
+'''
 def run_network(model, input_sentence, conv_layers_dims, dense_layers_dims, thresh):
 
     input_length = MAX_INPUT_SIZE
@@ -248,44 +310,81 @@ def run_network(model, input_sentence, conv_layers_dims, dense_layers_dims, thre
     return dense_out
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: get_loss
-Input: model - Pycnn model, input_sentence - a given article, conv_layers_dims - convolution layers dimensions,
-        dense_layers_dims - dense layers dimensions, threshold - threshold number.
-Output: network loss for a given article.
-Functionality: function is using the above "run_network" method and is calculating its loss according to the true
+'''Function is using the "run_network" method and is calculating its loss according to the true
                 label of the article.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param model: Pycnn model
+:param input_sentence: a given article
+:param conv_layers_dims: convolution layers dimensions
+:param dense_layers_dims: dense layers dimensions
+:param thresh: threshold number
+:type model: Pycnn model
+:type input_sentence: string
+:type conv_layers_dims: list<tuple<int>>
+:type dense_layers_dims: list<tuple<int>>
+:type thresh: float
+:returns: network loss for a given article
+:rtype: Pycnn float expression
+'''
 def get_loss(model, input_sentence, label, conv_layers_dims, dense_layers_dims, threshold):
     network_output = run_network(model, input_sentence, conv_layers_dims, dense_layers_dims, threshold)
     return pc.pickneglogsoftmax(network_output, label)
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: predict_label
-Input: model - Pycnn model, input_sentence - a given article, conv_layers_dims - convolution layers dimensions,
-        dense_layers_dims - dense layers dimensions, threshold - threshold number.
-Output: the predicted label of the network and the loss from th real one.
-Functionality: same as previous function, with the addition of returnning the predicted label according to the
+'''Function is using the "run_network" method, calculating its loss according to the true
+                label of the article and returning the predicted label according to the
                 highest value in the network output.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param model: Pycnn model
+:param input_sentence: a given article
+:param conv_layers_dims: convolution layers dimensions
+:param dense_layers_dims: dense layers dimensions
+:param thresh: threshold number
+:type model: Pycnn model
+:type input_sentence: string
+:type conv_layers_dims: list<tuple<int>>
+:type dense_layers_dims: list<tuple<int>>
+:type thresh: float
+:returns: predicted label of the network, network loss for a given article
+:rtype: int, Pycnn float expression
+'''
 def predict_label(model, input_sentence, label, conv_layers_dims, dense_layers_dims, threshold):
     network_output = run_network(model, input_sentence, conv_layers_dims, dense_layers_dims, threshold)
     return np.argmax(network_output.value()), pc.pickneglogsoftmax(network_output, label).value()
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: train
-Input: model - Pycnn model, trainer - pre initialized Pycnn trainer, batch_size - size of batch, epoch_num - number
-        of epochs to run, train_inputs - all train set values, train_labels - all train set labels, test_inputs -
-        all test set values, test_labels - all test set labels, cnn_dims - convolution layers dimensions,
-        dense_dims - dense layers dimensions, threshold - threshold number, test_file_name - test results file name,
-        weights_file_name - saved weights file name.
-Functionality: this function run the training of the network weights on the training set, with high verbosity for
+'''This function run the training of the network weights on the training set, with high verbosity for
                 train and test time to keep track of it's progress. Every batch size number of samples the back
                 propagation and the weights update takes place, every 10 batches a status print take place, and
                 every epoch a test and a weights save takes place.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param model: Pycnn model
+:param trainer: pre initialized Pycnn trainer
+:param batch_size: size of batch
+:param epoch_num: number of epochs to run
+:param train_inputs: all train set values
+:param train_labels: all train set labels
+:param test_inputs: all test set values
+:param test_labels: all test set labels
+:param cnn_dims: convolution layers dimensions
+:param dense_dims: dense layers dimensions
+:param threshold: threshold number
+:param test_file_name: test results file name
+:param weights_file_name: saved weights file name
+:type model: Pycnn model
+:type trainer: Pycnn trainer
+:type batch_size: int
+:type epoch_num: int
+:type train_inputs: list<string>
+:type train_labels: list<int>
+:type test_inputs: list<string>
+:type test_labels: list<int>
+:type cnn_dims: list<tuple<int>>
+:type dense_dims: list<tuple<int>>
+:type threshold: float
+:type test_file_name: string
+:type weights_file_name: string
+'''
 def train(model, trainer, batch_size, epoch_num, train_inputs, train_labels, test_inputs, test_labels,
           cnn_dims, dense_dims, threshold, test_file_name, weights_file_name):
     for epoch in xrange(epoch_num):
@@ -320,15 +419,25 @@ def train(model, trainer, batch_size, epoch_num, train_inputs, train_labels, tes
     return
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function Name: test
-Input: model - Pycnn model, test_inputs - all test set values, test_labels - all test set labels, cnn_dims -
-        convolution layers dimensions, dense_dims - dense layers dimensions, threshold - threshold number,
-        file_name - test results file name.
-Functionality: this function test the networks weights success on the test set, according to number of successful
+'''This function test the networks weights success on the test set, according to number of successful
                 runs of predicting the right label via forward propagation, and acoording to avrage loss value at
                 the end of the test.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+:param model: Pycnn model
+:param test_inputs: all test set values
+:param test_labels: all test set labels
+:param cnn_dims: convolution layers dimensions
+:param dense_dims: dense layers dimensions
+:param threshold: threshold number
+:param file_name: test results file name
+:type model: Pycnn model
+:type test_inputs: list<string>
+:type test_labels: list<int>
+:type cnn_dims: list<tuple<int>>
+:type dense_dims: list<tuple<int>>
+:type threshold: float
+:type file_name: string
+'''
 def test(model, test_inputs, test_labels, cnn_dims, dense_dims, threshold, file_name):
     input_data = zip(test_inputs, test_labels)
     num_of_success = 0
