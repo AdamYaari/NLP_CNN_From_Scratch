@@ -331,9 +331,9 @@ def get_loss(model, input_sentence, label, conv_layers_dims, dense_layers_dims, 
     return pc.pickneglogsoftmax(network_output, label)
 
 
-'''Function is using the "run_network" method, calculating its loss according to the true
-                label of the article and returning the predicted label according to the
+'''Function is using the "run_network" method to return the predicted label according to the
                 highest value in the network output.
+
 
 :param model: Pycnn model
 :param input_sentence: a given article
@@ -348,7 +348,33 @@ def get_loss(model, input_sentence, label, conv_layers_dims, dense_layers_dims, 
 :returns: predicted label of the network, network loss for a given article
 :rtype: int, Pycnn float expression
 '''
-def predict_label(model, input_sentence, label, conv_layers_dims, dense_layers_dims, threshold):
+def predict_label(model, input_sentence, conv_layers_dims, dense_layers_dims, threshold):
+    network_output = run_network(model, input_sentence, conv_layers_dims, dense_layers_dims, threshold)
+    classification = network_output.value()
+    return np.argmax(classification)
+
+
+'''Function is using the "run_network" method, calculating its loss according to the true
+                label of the article and returning the predicted label according to the
+                highest value in the network output.
+
+
+:param model: Pycnn model
+:param input_sentence: a given article
+:param label: the given article true label
+:param conv_layers_dims: convolution layers dimensions
+:param dense_layers_dims: dense layers dimensions
+:param thresh: threshold number
+:type model: Pycnn model
+:type input_sentence: string
+:type label: int
+:type conv_layers_dims: list<tuple<int>>
+:type dense_layers_dims: list<tuple<int>>
+:type thresh: float
+:returns: predicted label of the network, network loss for a given article
+:rtype: int, Pycnn float expression
+'''
+def predict_label_and_loss(model, input_sentence, label, conv_layers_dims, dense_layers_dims, threshold):
     network_output = run_network(model, input_sentence, conv_layers_dims, dense_layers_dims, threshold)
     return np.argmax(network_output.value()), pc.pickneglogsoftmax(network_output, label).value()
 
@@ -445,7 +471,7 @@ def test(model, test_inputs, test_labels, cnn_dims, dense_dims, threshold, file_
     index = 0
     pc.renew_cg()
     for sentence, label in input_data:
-        predicted_label, loss = predict_label(model, sentence, label, cnn_dims, dense_dims, threshold)
+        predicted_label, loss = predict_label_and_loss(model, sentence, label, cnn_dims, dense_dims, threshold)
         total_loss += loss
 
         if predicted_label == label:
