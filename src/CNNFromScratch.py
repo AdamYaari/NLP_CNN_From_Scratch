@@ -1,9 +1,8 @@
-"""Usage: CNNFromScratch.py [-n N | --max_text_length=N] [-l L | --learning_rate=L] [-m M | --momentum=M]
+"""Usage: CNNFromScratch.py [-l L | --learning_rate=L] [-m M | --momentum=M]
                 [-r R | --regularization=R] [-t T | --relu_threshold=T] [-b B | --batch_size=B] [-e E | --epoch_num=E]
                 [--weights_file_name=W] [--test_res_file_name=F] [--test_set_file_path=TES] [--train_set_file_path=TRS]
 
 Options:
-    -n --max_text_length=N  Maximum length out of the input the CNN will read [default: 1014]
     -l --learning_rate=L  The CNN learning rate [default: 0.01]
     -m --momentum=M  The CNN momentum [default: 0.9]
     -r --regularization=R  The CNN regularization constant [default: 0.000001]
@@ -26,7 +25,6 @@ import CNNFromScratchModule as module
 arguments = docopt.docopt(__doc__)
 
 # initialization of the network parameters
-MAX_INPUT_SIZE = int(arguments['--max_text_length'])
 learning_rate = float(arguments['--learning_rate'])
 momentum = float(arguments['--momentum'])
 regularization = float(arguments['--regularization'])
@@ -37,7 +35,6 @@ weights_file_name = arguments['--weights_file_name']
 test_res_file_name = arguments['--test_res_file_name']
 test_set_file_path = arguments['--test_set_file_path']
 train_set_file_path = arguments['--train_set_file_path']
-
 
 print 'Opening input files...'
 test_input = open(test_set_file_path, 'r')
@@ -55,12 +52,13 @@ module.initialize_cnn_model_weights(model, module.cnn_layers_dimensions, module.
 
 SGD_trainer = pc.MomentumSGDTrainer(model, e0=learning_rate, mom=momentum)
 
-print "Strat training with values: \nLearning rate: {} \nMomentum: {} \nRegularization constant: {} \nBatch size: {} " \
-      "\nEpoch number: {}".format(learning_rate, momentum, regularization, batch_size, epoch_num)
-
 with open(test_res_file_name, "w") as text_file:
-    text_file.write("Test results for: \nlr: {} \nmom: {} \nregular: {} \nthresh: {} \nbatch: {} \nepochs: {}"
+    text_file.write("Test results for:\nlr: {}\nmom: {}\nregular: {}\nthresh: {}\nbatch: {}\nepochs: {}"
                     .format(learning_rate, momentum, regularization, relu_threshold, batch_size, epoch_num))
+
+print "Start training with values: \nLearning rate: {} \nMomentum: {} \nRegularization constant: {} \nThreshold :{}" \
+      "\nBatch size: {} \nEpoch number: {}".format(learning_rate, momentum, regularization, relu_threshold, batch_size,
+                                                   epoch_num)
 
 # train and test of the network
 module.train(model, SGD_trainer, batch_size, epoch_num, train_strings, train_categories_int, test_strings,
@@ -68,6 +66,3 @@ module.train(model, SGD_trainer, batch_size, epoch_num, train_strings, train_cat
              test_res_file_name, weights_file_name)
 
 print "FINISHED TRAINING SUCCESSFULLY"
-
-
-
